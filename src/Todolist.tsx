@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, KeyboardEvent, useCallback } from 'react';
+import React, { useState, ChangeEvent, useEffect, useCallback } from 'react';
 import AddItemForm from './AddItemForm';
 import {FilterValuesType} from './App'
 import EditableSpan from './EditableSpan'
@@ -10,7 +10,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Task } from './Task';
-
+import { useDispatch } from 'react-redux';
+import {fetchTasksThunkTC} from './state/tasks-reducer'
 
 const useStyles = makeStyles({
     root: { },
@@ -49,8 +50,12 @@ type PropsType = {
 }
 
 export const Todolist = React.memo(function (props: PropsType) {
-console.log('Todo render')
+    const dispatch = useDispatch()
     const classes = useStyles();
+
+    useEffect(() => {
+        dispatch(fetchTasksThunkTC(props.id))
+    },[])
 
     // Удаление Todolist
     const onRemoveTodolistHandler = () => {

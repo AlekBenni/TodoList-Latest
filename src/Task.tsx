@@ -23,7 +23,8 @@ export const Task = React.memo((props:TaskPropsType) => {
     const onRemoveHandler = () => { props.removeTask(props.item.id, props.id) }
     // Изменение статуса чекбокса
     const onChangeHandler = useCallback((e:ChangeEvent<HTMLInputElement>) => 
-    {props.changeStatus(props.item.id, e.currentTarget.checked, props.id)},[])
+    {props.changeStatus(props.item.id, e.currentTarget.checked, props.id)},
+    [props.item.id, props.id, props.changeStatus])
     // Изменение title
     const onChangeTitleHandler = useCallback((title:string) => {
         props.onChangeTitle(title, props.item.id, props.id)

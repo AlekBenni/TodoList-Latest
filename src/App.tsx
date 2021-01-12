@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {Todolist, TaskType} from './Todolist';
 import './App.css'
 import AddItemForm from './AddItemForm';
@@ -11,12 +11,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import { removeTodolistAC, changeFilterAC, addTodolistAC, onChangeTodolistAC } from './state/todolist-reducer';
+import { removeTodolistAC, changeFilterAC, addTodolistAC, onChangeTodolistAC, fetchTodolistThunkTC } from './state/todolist-reducer';
 import { removeTaskAC, addTaskAC, changeStatusAC, onChangeTitleAC } from './state/tasks-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from './state/store';
 import Paper from '@material-ui/core/Paper';
 import {GetTodolists, CreateTodolist, DeleteTodolist, UpdateTodolistTitle, GetTasks, DeleteTask, CreateTask} from './testAPI'
+import {todolistsAPI} from './API/todolist-api'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -56,6 +57,10 @@ function App() {
 
     const todolists = useSelector<RootStateType,Array<TodolistType>>((state) => state.todolists)
     const tasks = useSelector<RootStateType, TaskStateType>((state) => state.tasks)
+
+    useEffect(() => {
+        dispatch(fetchTodolistThunkTC())
+    },[])
 
     // Удаляем таску
     const removeTask = useCallback((id:string, todolistId:string) => {
@@ -115,13 +120,34 @@ function App() {
                 <AddItemForm addItem={addTodolist} />
             </Grid>
 
+            <Grid container>
+
+            {todolists.map(todo => {
+                // Фильтруем таски
+                let taskForTodoList = tasks[todo.id]
+                return (
+                <Todolist title={todo.title}
+                key={todo.id}
+                id={todo.id}
+                tasks={taskForTodoList} 
+                removeTask={removeTask}
+                removeTodolist={removeTodolist}
+                changeFilter={changeFilter}
+                addTask={addTask}
+                changeStatus={changeStatus}
+                filter={todo.filter}
+                onChangeTitle={onChangeTitle}
+                onChangeTodolist={onChangeTodolist}
+                />  
+                )
+            })}
+            </Grid>
             <Grid container>   
                 <Grid item xs={12}>            
                     <Paper elevation={3} className={classes.pepperStyle} >
                         <GetTodolists />
                     </Paper>
                 </Grid>
-
                 <Grid item xs={12}>            
                     <Paper elevation={3} className={classes.pepperStyle} >
                         <CreateTodolist />
@@ -153,29 +179,6 @@ function App() {
                         <CreateTask />
                     </Paper>
                 </Grid>
-            </Grid>
-
-            <Grid container>
-
-            {todolists.map(todo => {
-                // Фильтруем таски
-                let taskForTodoList = tasks[todo.id]
-                return (
-                <Todolist title={todo.title}
-                key={todo.id}
-                id={todo.id}
-                tasks={taskForTodoList} 
-                removeTask={removeTask}
-                removeTodolist={removeTodolist}
-                changeFilter={changeFilter}
-                addTask={addTask}
-                changeStatus={changeStatus}
-                filter={todo.filter}
-                onChangeTitle={onChangeTitle}
-                onChangeTodolist={onChangeTodolist}
-                />  
-                )
-            })}
             </Grid>
             </Container>
         </div>

@@ -164,35 +164,62 @@ export const DeleteTask = () => {
 }
 
 export const CreateTask = () => {
-  const [state, setState] = useState<any>()
-  const [todolistId, setTodolistId] = useState('')
-  const [title, setTitle] = useState('')
- const createTask = () => {
-   todolistsAPI.createTask(todolistId, title).then((response) => {
-     setState(response.data)
-   }).catch(() => {alert("Something wrong in createTask!")})}
-  return (
-    <div>
-      <TextField
-          onChange={(e:ChangeEvent<HTMLInputElement>) => {setTodolistId(e.currentTarget.value)}}
-          id="outlined-password-input"
-          label="Todolist Id"
-          type="text"
-          autoComplete="current-password"
-          variant="outlined"
-        />
-      <p><TextField
-          onChange={(e:ChangeEvent<HTMLInputElement>) => {setTitle(e.currentTarget.value)}}
-          id="outlined-password-input"
-          label="Title"
-          type="text"
-          autoComplete="current-password"
-          variant="outlined"
-        /></p>
-        <Button onClick={createTask} variant="contained" color="primary">
-        createTask
-        </Button>
-        <div> {JSON.stringify(state)}</div>
-    </div>
-  )
+  const [state, setState] = useState<any>(null)
+  const [taskTitle, setTaskTitle] = useState<string>('')
+  const [todolistId, setTodolistId] = useState<string>('')
+
+  const createTask = () => {
+      todolistsAPI.createTask(todolistId, taskTitle)
+          .then((res) => {
+              setState(res.data)
+          })
+  }
+
+  return <div> {JSON.stringify(state)}
+      <div>
+          <input placeholder={'todolistId'} value={todolistId}
+                 onChange={(e) => {
+                     setTodolistId(e.currentTarget.value)
+                 }}/>
+          <input placeholder={'Task Title'} value={taskTitle}
+                 onChange={(e) => {
+                     setTaskTitle(e.currentTarget.value)
+                 }}/>
+          <button onClick={createTask}>create task</button>
+      </div>
+  </div>
 }
+
+// export const CreateTask = () => {
+//   const [state, setState] = useState<any>()
+//   const [todolistId, setTodolistId] = useState('')
+//   const [title, setTitle] = useState('')
+//  const createTask = () => {
+//    todolistsAPI.createTask(todolistId, title).then((response) => {
+//      setState(response.data)
+//    }).catch(() => {alert("Something wrong in createTask!")})}
+//   return (
+//     <div>
+//       <TextField
+//           onChange={(e:ChangeEvent<HTMLInputElement>) => {setTodolistId(e.currentTarget.value)}}
+//           id="outlined-password-input"
+//           label="Todolist Id"
+//           type="text"
+//           autoComplete="current-password"
+//           variant="outlined"
+//         />
+//       <p><TextField
+//           onChange={(e:ChangeEvent<HTMLInputElement>) => {setTitle(e.currentTarget.value)}}
+//           id="outlined-password-input"
+//           label="Title"
+//           type="text"
+//           autoComplete="current-password"
+//           variant="outlined"
+//         /></p>
+//         <Button onClick={createTask} variant="contained" color="primary">
+//         createTask
+//         </Button>
+//         <div> {JSON.stringify(state)}</div>
+//     </div>
+//   )
+// }
