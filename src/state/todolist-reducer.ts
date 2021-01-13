@@ -10,8 +10,7 @@ export type RemoveTodolistType = {
 
 export type AddTodolistType = {
    type: 'ADD-TODOLIST'
-   title: string
-   newTodoId: string
+   todolist: any
 }
 
 type ChangeTodolistType = {
@@ -43,12 +42,8 @@ type ActionType = RemoveTodolistType | AddTodolistType | ChangeTodolistType | Ch
          case 'REMOVE-TODOLIST':          
             return([...state.filter(todo => todo.id !== action.todolistId)]) 
          case 'ADD-TODOLIST':
-            let todolist:TodolistType = {
-               id: action.newTodoId,
-               title: action.title,
-               filter: "all"
-           }
-           return([todolist, ...state])
+            const newTodolist = {...action.todolist, filter: 'all'}
+           return [newTodolist, ...state] 
          case 'ONCHANGE-TODOLIST': {
             let todolist = state.find(todo => todo.id === action.todolistId)
             if(todolist)todolist.title = action.title
@@ -70,9 +65,7 @@ type ActionType = RemoveTodolistType | AddTodolistType | ChangeTodolistType | Ch
     type: 'REMOVE-TODOLIST', todolistId
  })
  
- export const addTodolistAC = (title:string):AddTodolistType => ({type: 'ADD-TODOLIST', title,
- newTodoId: v1()
- })
+ export const addTodolistAC = (todolist:any):AddTodolistType => ({type: 'ADD-TODOLIST', todolist})
 
  export const onChangeTodolistAC = (title:string, todolistId:string):ChangeTodolistType => ({
     type: 'ONCHANGE-TODOLIST', title, todolistId
@@ -95,4 +88,39 @@ export const fetchTodolistThunkTC = () => {
 }
 }
 
+export const removeTodolistTC = (todoId:string) => {
+   return (dispatch:Dispatch) => {
+   todolistsAPI.deleteTodos(todoId)
+   .then((response) => {
+      dispatch(removeTodolistAC(todoId))
+   })
+}
+}
+
+export const onChangeTodolist = (todoId:string) => {
+   return (dispatch:Dispatch) => {
+   todolistsAPI.createTodos(todoId)
+   .then((response) => {
+      dispatch(addTodolistAC(response.data.data.item))
+   })
+}
+}
+
+export const addTodolistTC = (todoId:string) => {
+   return (dispatch:Dispatch) => {
+   todolistsAPI.createTodos(todoId)
+   .then((response) => {
+      dispatch(addTodolistAC(response.data.data.item))
+   })
+}
+}
+
+export const onChangeTodolistTC = (title:string, todolistId:string) => {
+   return (dispatch:Dispatch) => {
+   todolistsAPI.upDataTodos(todolistId, title)
+   .then((response) => {
+      dispatch(onChangeTodolistAC(title, todolistId))
+   })
+}
+}
 

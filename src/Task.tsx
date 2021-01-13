@@ -9,12 +9,13 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import {TaskType} from './Todolist'
+import {TaskStatuses} from '../src/API/todolist-api'
 
 type TaskPropsType = {
     id:string
     item:TaskType
     removeTask: (id:string, todolistId:string) => void
-    changeStatus: (taskId: string, isDone:boolean, todolistId:string) => void
+    changeStatus: (taskId: string, status: TaskStatuses, todolistId:string) => void
     onChangeTitle: (title:string, id:string, todolistId:string) => void
 }
 
@@ -22,9 +23,10 @@ export const Task = React.memo((props:TaskPropsType) => {
     // Удаление таски из массива
     const onRemoveHandler = () => { props.removeTask(props.item.id, props.id) }
     // Изменение статуса чекбокса
-    const onChangeHandler = useCallback((e:ChangeEvent<HTMLInputElement>) => 
-    {props.changeStatus(props.item.id, e.currentTarget.checked, props.id)},
-    [props.item.id, props.id, props.changeStatus])
+    const onChangeHandler = useCallback((e:ChangeEvent<HTMLInputElement>) => {
+    let newIsDoneValue = e.currentTarget.checked    
+        props.changeStatus(props.item.id, newIsDoneValue ? TaskStatuses.Completed : TaskStatuses.New, props.id)},
+    [props.item.id, props.id])
     // Изменение title
     const onChangeTitleHandler = useCallback((title:string) => {
         props.onChangeTitle(title, props.item.id, props.id)

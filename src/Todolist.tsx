@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import { Task } from './Task';
 import { useDispatch } from 'react-redux';
 import {fetchTasksThunkTC} from './state/tasks-reducer'
+import {TaskStatuses} from '../src/API/todolist-api'
 
 const useStyles = makeStyles({
     root: { },
@@ -44,7 +45,7 @@ type PropsType = {
     removeTodolist: (todolistId:string) => void
     changeFilter: (filter: FilterValuesType, todolistId:string) => void
     addTask: (title:string,  todolistId:string) => void
-    changeStatus: (taskId: string, isDone:boolean, todolistId:string) => void
+    changeStatus: (taskId: string, status: TaskStatuses, todolistId:string) => void
     onChangeTitle: (title:string, id:string, todolistId:string) => void
     onChangeTodolist: (title:string, todolistId:string) => void
 }

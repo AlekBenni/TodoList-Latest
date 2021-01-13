@@ -11,13 +11,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import { removeTodolistAC, changeFilterAC, addTodolistAC, onChangeTodolistAC, fetchTodolistThunkTC } from './state/todolist-reducer';
-import { removeTaskAC, addTaskAC, changeStatusAC, onChangeTitleAC } from './state/tasks-reducer';
+import { removeTodolistTC, changeFilterAC, addTodolistTC, onChangeTodolistTC, fetchTodolistThunkTC } from './state/todolist-reducer';
+import { removeTaskTC, addTaskTC, updateTaskTC, onChangeTitleAC } from './state/tasks-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from './state/store';
 import Paper from '@material-ui/core/Paper';
 import {GetTodolists, CreateTodolist, DeleteTodolist, UpdateTodolistTitle, GetTasks, DeleteTask, CreateTask} from './testAPI'
-import {todolistsAPI} from './API/todolist-api'
+import {TaskStatuses} from './API/todolist-api'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,18 +64,18 @@ function App() {
 
     // Удаляем таску
     const removeTask = useCallback((id:string, todolistId:string) => {
-        dispatch(removeTaskAC(id, todolistId))
+        dispatch(removeTaskTC(id, todolistId)) 
     }, [dispatch])
 
     // Удаляем Todolist
     const removeTodolist = useCallback((todolistId:string) => {
-        let action = removeTodolistAC(todolistId)
-        dispatch(action)
+        let thank = removeTodolistTC(todolistId)
+        dispatch(thank)
     },[dispatch])
 
     // Добавляем таску в массив таск
     const addTask = useCallback((title:string, todolistId:string) => {
-        dispatch(addTaskAC(title, todolistId))
+        dispatch(addTaskTC(title, todolistId))
     },[dispatch])
 
     // Задаём значение в state для фильтрации таски в Todolist
@@ -84,24 +84,24 @@ function App() {
     }, [dispatch])
 
     // Меняем статус чекбокса таски
-    const changeStatus = useCallback((taskId: string, isDone:boolean, todolistId:string) => {
-        dispatch(changeStatusAC(taskId, isDone, todolistId))
+    const changeStatus = useCallback((taskId: string, status:any, todolistId:string) => {
+        dispatch(updateTaskTC(taskId, {status}, todolistId))
     },[dispatch])
 
     // Добавление Todolist
     const addTodolist = useCallback((title:string) => {
-       let action = addTodolistAC(title)
+       let action = addTodolistTC(title)
         dispatch(action)
     }, [dispatch])
 
     // Изменение title таски
     const onChangeTitle = useCallback((title:string, id: string, todolistId:string) => {
-        dispatch(onChangeTitleAC(title, id, todolistId))
+        dispatch(updateTaskTC(id, {title}, todolistId))
     },[dispatch])
 
     // Изменение Todolist title
     const onChangeTodolist = useCallback( (title:string, todolistId:string) => {
-        dispatch(onChangeTodolistAC(title, todolistId))
+        dispatch(onChangeTodolistTC(title, todolistId))
     }, [dispatch])
 
     return (
