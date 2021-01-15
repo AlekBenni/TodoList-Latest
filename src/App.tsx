@@ -88,7 +88,7 @@ function App() {
         dispatch(updateTaskTC(taskId, {status}, todolistId))
     },[dispatch])
 
-    // Добавление Todolist
+    // Добавление Todolists
     const addTodolist = useCallback((title:string) => {
        let action = addTodolistTC(title)
         dispatch(action)
