@@ -15,9 +15,10 @@ import { removeTodolistTC, changeFilterAC, addTodolistTC, onChangeTodolistTC, fe
 import { removeTaskTC, addTaskTC, updateTaskTC, onChangeTitleAC } from './state/tasks-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from './state/store';
-import Paper from '@material-ui/core/Paper';
 import {GetTodolists, CreateTodolist, DeleteTodolist, UpdateTodolistTitle, GetTasks, DeleteTask, CreateTask} from './testAPI'
 import {TaskStatuses} from './API/todolist-api'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import {ErrorSnackbar} from './ErrorSnackBar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -115,6 +116,7 @@ function App() {
                 <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
+            <LinearProgress color="secondary" />
             <Container fixed>
             <Grid container className={classes.contStyle} >
                 <AddItemForm addItem={addTodolist} />
@@ -142,44 +144,8 @@ function App() {
                 )
             })}
             </Grid>
-            <Grid container>   
-                <Grid item xs={12}>            
-                    <Paper elevation={3} className={classes.pepperStyle} >
-                        <GetTodolists />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12}>            
-                    <Paper elevation={3} className={classes.pepperStyle} >
-                        <CreateTodolist />
-                    </Paper>
-                </Grid>
+            <ErrorSnackbar />
 
-                <Grid item xs={12}>            
-                    <Paper elevation={3} className={classes.pepperStyle} >
-                        <DeleteTodolist />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12}>            
-                    <Paper elevation={3} className={classes.pepperStyle} >
-                        <UpdateTodolistTitle />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12}>            
-                    <Paper elevation={3} className={classes.pepperStyle} >
-                        <GetTasks />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12}>            
-                    <Paper elevation={3} className={classes.pepperStyle} >
-                        <DeleteTask />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12}>            
-                    <Paper elevation={3} className={classes.pepperStyle} >
-                        <CreateTask />
-                    </Paper>
-                </Grid>
-            </Grid>
             </Container>
         </div>
     );
