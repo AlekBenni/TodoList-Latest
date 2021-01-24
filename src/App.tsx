@@ -19,6 +19,7 @@ import {GetTodolists, CreateTodolist, DeleteTodolist, UpdateTodolistTitle, GetTa
 import {TaskStatuses} from './API/todolist-api'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import {ErrorSnackbar} from './ErrorSnackBar';
+import {RequestStatusType} from './state/app-reducer'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,6 +59,7 @@ function App() {
 
     const todolists = useSelector<RootStateType,Array<TodolistType>>((state) => state.todolists)
     const tasks = useSelector<RootStateType, TaskStateType>((state) => state.tasks)
+    const preLoader = useSelector<RootStateType, RequestStatusType>((state) => state.app.status)
 
     useEffect(() => {
         dispatch(fetchTodolistThunkTC())
@@ -116,7 +118,7 @@ function App() {
                 <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
-            <LinearProgress color="secondary" />
+            {preLoader === 'loading' && <LinearProgress color="secondary" /> }
             <Container fixed>
             <Grid container className={classes.contStyle} >
                 <AddItemForm addItem={addTodolist} />

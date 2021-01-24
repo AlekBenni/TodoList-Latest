@@ -17,7 +17,6 @@ type AddItemPropsType = {
 
 export const AddItemForm = React.memo((props:AddItemPropsType) => {
     const classes = useStyles();
-console.log('Add item render')
     const [newTaskTitle, setNewTaskTitle] = useState('')
 
     const [error, setError] = useState<null | string>(null)

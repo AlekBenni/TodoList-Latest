@@ -1,3 +1,4 @@
+import { setError, setStatus } from './app-reducer';
 import { RemoveTodolistType, AddTodolistType, SetTodolistType } from './todolist-reducer';
 import { TaskStateType } from './../App';
 import {TaskType} from '../Todolist'
@@ -106,12 +107,14 @@ export const SetTasksAC = ( tasks: any, todolistId: string):SetTasksType => ({
     type: 'SET-TASKS', tasks, todolistId
 })
 
-export const fetchTasksThunkTC = (todolistId:string) => {
+export const fetchTasksThunkTC = (todolistId:string) => {   
     return (dispatch:Dispatch) => {
+    dispatch(setStatus('loading'))    
         todolistsAPI.getTasks(todolistId)
         .then((response) => {
             dispatch(SetTasksAC(response.data.items, todolistId))
-        })
+            dispatch(setStatus('succeeded')) 
+        }) 
     }
 }
 
@@ -128,7 +131,16 @@ export const addTaskTC = (title:string, todolistId:string) => {
     return (dispatch:Dispatch) => {
         todolistsAPI.createTask(todolistId, title)
         .then((response) => {
-            dispatch(addTaskAC(response.data.data.item))
+            if(response.data.resultCode == 0){
+                dispatch(addTaskAC(response.data.data.item))
+            }
+                else {
+                    if(response.data.messages.length){
+                        dispatch(setError(response.data.messages[0]))
+                    }else {
+                        dispatch(setError('Some error exist'))
+                    }
+                }
         })
     }
 }
