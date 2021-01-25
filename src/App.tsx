@@ -46,6 +46,7 @@ export type TodolistType = {
     id: string
     title: string
     filter: FilterValuesType
+    entityStatus? :string
 }
 
 export type TaskStateType = {
@@ -130,16 +131,15 @@ function App() {
                 // Фильтруем таски
                 let taskForTodoList = tasks[todo.id]
                 return (
-                <Todolist title={todo.title}
+                <Todolist
+                todolist={todo}
                 key={todo.id}
-                id={todo.id}
                 tasks={taskForTodoList} 
                 removeTask={removeTask}
                 removeTodolist={removeTodolist}
                 changeFilter={changeFilter}
                 addTask={addTask}
                 changeStatus={changeStatus}
-                filter={todo.filter}
                 onChangeTitle={onChangeTitle}
                 onChangeTodolist={onChangeTodolist}
                 />  

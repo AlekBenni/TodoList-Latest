@@ -1,3 +1,4 @@
+import { hendleAppError, hendleNetworkError } from './../utils/error-utils';
 import { setError, setStatus } from './app-reducer';
 import { RemoveTodolistType, AddTodolistType, SetTodolistType } from './todolist-reducer';
 import { TaskStateType } from './../App';
@@ -120,27 +121,30 @@ export const fetchTasksThunkTC = (todolistId:string) => {
 
 export const removeTaskTC = (id:string, todolistId:string) => {
     return (dispatch:Dispatch) => {
+        dispatch(setStatus('loading')) 
         todolistsAPI.deleteTask(todolistId, id)
         .then(response => {
            dispatch(removeTaskAC(id, todolistId)) 
+           dispatch(setStatus('succeeded')) 
         })     
     }
 }
 
 export const addTaskTC = (title:string, todolistId:string) => {
     return (dispatch:Dispatch) => {
+        dispatch(setStatus('loading')) 
         todolistsAPI.createTask(todolistId, title)
         .then((response) => {
             if(response.data.resultCode == 0){
                 dispatch(addTaskAC(response.data.data.item))
+                dispatch(setStatus('succeeded')) 
             }
                 else {
-                    if(response.data.messages.length){
-                        dispatch(setError(response.data.messages[0]))
-                    }else {
-                        dispatch(setError('Some error exist'))
-                    }
+                    hendleAppError(response, dispatch)
                 }
+        })
+        .catch((error) => {
+            hendleNetworkError(error, dispatch)      
         })
     }
 }
@@ -164,12 +168,21 @@ export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelT
             status: task.status,
             ...domainModel
         }
-
+        dispatch(setStatus('loading')) 
         todolistsAPI.updateTask(todolistId, taskId, apiModel)
-            .then(res => {
+            .then(response => {
+                if(response.data.resultCode === 0){
                 const action = changeStatusAC(taskId, domainModel, todolistId)
                 dispatch(action)
+                dispatch(setStatus('succeeded'))                     
+                }
+                else{
+                    hendleAppError(response, dispatch)  
+                }             
             })
+         .catch((error) => {
+            hendleNetworkError(error, dispatch)              
+         })    
     }}
 
     export type UpdateDomainTaskModelType = {
