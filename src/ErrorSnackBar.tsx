@@ -17,7 +17,7 @@ function Alert(props: AlertProps) {
 }
 
 export function ErrorSnackbar() {
-    //const [open, setOpen] = React.useState(true)
+
     const classes = useStyles();
     const error = useSelector<RootStateType, string | null>((state) => state.app.error)
     const dispatch = useDispatch()
@@ -26,12 +26,10 @@ export function ErrorSnackbar() {
         if (reason === 'clickaway') {
             return
         }
-       //setOpen(false)
        dispatch(setError(null))
     }
 
     const isOpen = error !== null
-    console.log(isOpen)
 
     return (
         <Snackbar open={isOpen} autoHideDuration={3000} onClose={handleClose}>

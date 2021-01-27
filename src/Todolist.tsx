@@ -51,7 +51,6 @@ type PropsType = {
 export const Todolist = React.memo(function (props: PropsType) {
     const dispatch = useDispatch()
     const classes = useStyles();
-    console.log(`Status is ${props.todolist.entityStatus}`)
     useEffect(() => {
         dispatch(fetchTasksThunkTC(props.todolist.id))
     },[])
