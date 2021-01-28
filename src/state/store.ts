@@ -1,3 +1,4 @@
+import { loginReducer } from './../Login/login-reducer';
 import { tasksReducer } from './tasks-reducer';
 import { todolistsReducer } from './todolist-reducer';
 import { appReducer } from './app-reducer'
@@ -7,7 +8,8 @@ import thunk from 'redux-thunk'
 const RootReducer = combineReducers({
     todolists: todolistsReducer,
     tasks: tasksReducer,
-    app: appReducer
+    app: appReducer,
+    login: loginReducer
 })
 
 export type RootStateType = ReturnType<typeof RootReducer>

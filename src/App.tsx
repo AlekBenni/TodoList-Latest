@@ -17,9 +17,11 @@ import {GetTodolists, CreateTodolist, DeleteTodolist, UpdateTodolistTitle, GetTa
 import {TaskStatuses} from './API/todolist-api'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import {ErrorSnackbar} from './ErrorSnackBar';
-import {RequestStatusType} from './state/app-reducer'
-import { BrowserRouter } from 'react-router-dom';
+import {initAppTC, RequestStatusType} from './state/app-reducer'
+import { BrowserRouter, Route } from 'react-router-dom';
 import TodolistList from './TodolistList';
+import { Login } from './Login/Login';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
     pepperStyle: {
         padding: '10px 20px',
         marginBottom: '10px'
+    },
+    progress: {
+        display: 'flex',
+        justifyContent: 'center',
+        height: '100vh',
+        alignItems: 'center'
     }
   }));
 
@@ -55,8 +63,18 @@ export type TaskStateType = {
 
 function App() {
     const classes = useStyles();
-    const dispatch = useDispatch()
+    
     const preLoader = useSelector<RootStateType, RequestStatusType>((state) => state.app.status)
+    const initApp = useSelector<RootStateType, boolean>((state) => state.app.isAuth)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(initAppTC())
+    },[])   
+
+    if(!initApp){return <div className={classes.progress}><CircularProgress color="secondary" /></div> }
+    
+    const demo = false
 
     return (
         <BrowserRouter>
@@ -73,7 +91,8 @@ function App() {
             {preLoader === 'loading' && <LinearProgress color="secondary" /> }
             <Container fixed>
 
-            <TodolistList/>
+            <Route exact path = {"/"} render = {() => <TodolistList demo={demo}/>} />
+            <Route path = {"/login"} render = {() => <Login />} />
   
             <ErrorSnackbar />
 

@@ -8,6 +8,7 @@ import { RootStateType } from './state/store';
 import {TodolistType, TaskStateType, FilterValuesType} from './App'
 import AddItemForm from './AddItemForm';
 import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     contStyle: {
@@ -25,10 +26,11 @@ const TodolistList: React.FC<PropsType> = ({demo = false}) => {
     const classes = useStyles();
     const todolists = useSelector<RootStateType,Array<TodolistType>>((state) => state.todolists)
     const tasks = useSelector<RootStateType, TaskStateType>((state) => state.tasks)
+    const isLoggedIn = useSelector<RootStateType>((state) => state.login.isLoginIn)
 
     useEffect(() => {
         dispatch(fetchTodolistThunkTC())
-    },[])
+    }, [])
 
     // Удаляем таску
     const removeTask = useCallback((id:string, todolistId:string) => {
@@ -66,11 +68,15 @@ const TodolistList: React.FC<PropsType> = ({demo = false}) => {
         dispatch(onChangeTodolistTC(title, todolistId))
     }, [dispatch])
 
-        // Добавление Todolists
-        const addTodolist = useCallback((title:string) => {
-            let action = addTodolistTC(title)
-             dispatch(action)
-         }, [dispatch])
+    // Добавление Todolists
+    const addTodolist = useCallback((title:string) => {
+        let action = addTodolistTC(title)
+        dispatch(action)
+    }, [dispatch])
+
+         if (!isLoggedIn) {
+            return <Redirect to={"/login"} />
+        }
 
     return (
         <>
