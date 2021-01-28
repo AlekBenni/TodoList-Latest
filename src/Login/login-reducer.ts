@@ -45,3 +45,19 @@ export const loginTC = (data:LoginParamType) => {
     }
 }
 
+export const logoutTC = () => (dispatch: Dispatch) => {
+    authApi.logout()
+    .then((response) => {
+        if(response.data.resultCode === 0){
+            dispatch(setLogin(false))
+            dispatch(setStatus('succeeded')) 
+        }
+        else {
+            hendleAppError(response, dispatch)
+        }
+    })
+    .catch((error) => {
+        hendleNetworkError(error, dispatch)      
+    })   
+}
+

@@ -22,6 +22,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import TodolistList from './TodolistList';
 import { Login } from './Login/Login';
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { logoutTC } from './Login/login-reducer';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -66,11 +67,16 @@ function App() {
     
     const preLoader = useSelector<RootStateType, RequestStatusType>((state) => state.app.status)
     const initApp = useSelector<RootStateType, boolean>((state) => state.app.isAuth)
+    const isLoginIn = useSelector<RootStateType, boolean>((state) => state.login.isLoginIn)
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(initAppTC())
     },[])   
+
+    const logout = useCallback(() => {
+        dispatch(logoutTC())
+    }, [])
 
     if(!initApp){return <div className={classes.progress}><CircularProgress color="secondary" /></div> }
     
@@ -85,7 +91,8 @@ function App() {
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}> Todolist </Typography>
-                <Button color="inherit">Login</Button>
+                {isLoginIn === true && <Button onClick={logout} color="inherit">Logout</Button>}
+                
                 </Toolbar>
             </AppBar>
             {preLoader === 'loading' && <LinearProgress color="secondary" /> }

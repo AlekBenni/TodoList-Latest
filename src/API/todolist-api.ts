@@ -109,6 +109,10 @@ export const authApi = {
     me(){
         const promise = instance.get(`/auth/me`)
         return promise
+    },
+    logout(){
+        const promise = instance.delete(`/auth/login`)
+        return promise
     }
 }
 
