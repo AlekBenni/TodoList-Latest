@@ -38,7 +38,7 @@ export const Login = () => {
             }
 
             if(!values.password){
-                errors.password = 'Password is Required!'
+                errors.password = 'Password is here!'
             }
             return errors
         }      
