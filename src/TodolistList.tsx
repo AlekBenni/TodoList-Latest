@@ -37,7 +37,7 @@ const TodolistList: React.FC<PropsType> = ({demo = false}) => {
         dispatch(removeTaskTC(id, todolistId)) 
     }, [dispatch])
 
-    // Удаляем Todolist
+    // Удаляем Todolists
     const removeTodolist = useCallback((todolistId:string) => {
         let thank = removeTodolistTC(todolistId)
         dispatch(thank)
